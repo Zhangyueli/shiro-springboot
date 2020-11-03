@@ -1,6 +1,6 @@
 package com.example.shirospringboot.config;
 
-import org.apache.shiro.mgt.DefaultSecurityManager;
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,10 +34,14 @@ public class ShiroConfig {
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("/user/add","authc");
         filterMap.put("/user/update","authc");
+        filterMap.put("/user/add","perms[user:add]");
+        filterMap.put("/user/update","perms[user:update]");
 
         bean.setFilterChainDefinitionMap(filterMap);
 
+        System.out.println("shiroConfig-------");
         bean.setLoginUrl("/toLogin");
+        bean.setUnauthorizedUrl("/unauth");
         return bean;
     }
 
@@ -54,5 +58,11 @@ public class ShiroConfig {
     @Bean(name="userRealm")
     public UserReaml userReaml(){
         return new UserReaml();
+    }
+
+    //shiro整合thymeleaf
+    @Bean
+    public ShiroDialect getShiroDialect(){
+        return new ShiroDialect();
     }
 }
