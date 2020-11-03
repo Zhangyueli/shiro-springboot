@@ -11,6 +11,9 @@
 <div th:if="${session.loginUser==null}">
     <a th:href="@{/toLogin}">登录</a>
 </div>
+<div th:if="${session.loginUser!=null}">
+    <a th:href="@{/logout}">退出</a>
+</div>
 <p th:text="${msg}"></p>
 <hr>
 <div shiro:hasPermission="user:add">
