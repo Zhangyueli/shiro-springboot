@@ -37,6 +37,11 @@ public class MyController {
         return "/user/update";
     }
 
+    @RequestMapping("/user/delete")
+    public String delete(){
+        return "/user/delete";
+    }
+
     @RequestMapping("/toLogin")
     public String tologin(){
         return "/login";

@@ -25,8 +25,7 @@ public class UserReaml extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("执行了，授权-》doGetAuthorizationInfo");
-        Subject subject = SecurityUtils.getSubject();
-        User currentUser = (User) subject.getPrincipal();
+        User currentUser = (User) principalCollection.getPrimaryPrincipal();
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         simpleAuthorizationInfo.addStringPermission(currentUser.getPerm());
         return simpleAuthorizationInfo;

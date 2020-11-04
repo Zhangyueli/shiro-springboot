@@ -34,20 +34,15 @@ public class ShiroConfig {
             role：拥有某个角色权限才能访问
          */
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
-        /*filterMap.put("/user/add","authc");
-        filterMap.put("/user/update","authc");
-        filterMap.put("/user/add","perms[user:add]");
-        filterMap.put("/user/update","perms[user:update]");*/
         filterMap.put("/tologin","anon");
+        filterMap.put("/login","anon");
         filterMap.put("/","anon");
         filterMap.put("/index","anon");
-        //filterMap.put("/**","perms");
+        filterMap.put("/**","authc");
 
         bean.setFilterChainDefinitionMap(filterMap);
 
-        System.out.println("shiroConfig-------");
         bean.setLoginUrl("/toLogin");
-        bean.setUnauthorizedUrl("/unauth");
         return bean;
     }
 
@@ -73,7 +68,7 @@ public class ShiroConfig {
     }
 
     /**
-     *  开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
+     *  开启Shiro的注解(@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
      * 配置以下两个bean(DefaultAdvisorAutoProxyCreator和AuthorizationAttributeSourceAdvisor)即可实现此功能
      * @return
      */
