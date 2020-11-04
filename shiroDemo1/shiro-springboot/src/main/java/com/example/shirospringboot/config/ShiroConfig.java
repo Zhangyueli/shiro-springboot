@@ -1,8 +1,10 @@
 package com.example.shirospringboot.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,10 +34,14 @@ public class ShiroConfig {
             role：拥有某个角色权限才能访问
          */
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
-        filterMap.put("/user/add","authc");
+        /*filterMap.put("/user/add","authc");
         filterMap.put("/user/update","authc");
         filterMap.put("/user/add","perms[user:add]");
-        filterMap.put("/user/update","perms[user:update]");
+        filterMap.put("/user/update","perms[user:update]");*/
+        filterMap.put("/tologin","anon");
+        filterMap.put("/","anon");
+        filterMap.put("/index","anon");
+        //filterMap.put("/**","perms");
 
         bean.setFilterChainDefinitionMap(filterMap);
 
@@ -64,5 +70,23 @@ public class ShiroConfig {
     @Bean
     public ShiroDialect getShiroDialect(){
         return new ShiroDialect();
+    }
+
+    /**
+     *  开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
+     * 配置以下两个bean(DefaultAdvisorAutoProxyCreator和AuthorizationAttributeSourceAdvisor)即可实现此功能
+     * @return
+     */
+    @Bean
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        advisorAutoProxyCreator.setProxyTargetClass(true);
+        return advisorAutoProxyCreator;
+    }
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(@Qualifier("securityManager")DefaultWebSecurityManager defaultWebSecurityManager){
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(defaultWebSecurityManager);
+        return authorizationAttributeSourceAdvisor;
     }
 }
